@@ -1,1 +1,0 @@
-http://eric.clst.org/Stuff/USGeoJSON - GeoJSON list of polygons for US borders
