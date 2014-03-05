@@ -1,0 +1,3 @@
+Categorical REGEX \.\.\. CATEGORICAL \.\.\..+&&
+Cat High (using Cat RegEx) HIGH   ((\d{8})( |\s       ))*(\d{8})
+(similar for MDT, SLGT, TSTM) 
