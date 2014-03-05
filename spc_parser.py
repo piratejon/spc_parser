@@ -73,7 +73,7 @@ def in_cat_risk_area(polygons_list):
 manor = Point(35.209205,-97.451605)
 chicago = Point(41.8819,-87.6278) # for day 1 sign outlook
 #importing the polygon list and concatinating into one long string for regex parsing
-day_1_risk = open('high_risk_day_1.txt', 'r') # test file with all risk categories
+day_1_risk = open('examples/high_risk_day_1.txt', 'r') # test file with all risk categories
 risk_list = day_1_risk.readlines()
 risk_text = "".join(risk_list)
 """
