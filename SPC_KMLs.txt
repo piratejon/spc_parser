@@ -1,0 +1,7 @@
+https://pythonhosted.org/pykml/
+
+http://www.spc.noaa.gov/gis/
+http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml
+http://www.spc.noaa.gov/products/outlook/day1otlk_torn.kml
+http://www.spc.noaa.gov/products/outlook/day1otlk_wind.kml
+http://www.spc.noaa.gov/products/outlook/day1otlk_hail.kml
