@@ -76,8 +76,12 @@ cat_list = ("http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml","http://
 optParser = OptionParser()
 optParser.add_option("-s", "--short", "--conky", dest="short", action="store_true", help="Display shorthand output instead", default=False)
 optParser.add_option("-l", "--legacy", dest="legacy", action="store_true", help="Interprets file as pre-2014 change to Risk Areas", default=False)
-optParser.add_option("-p", "--point", "--coord", dest="location", metavar="(LAT,LONG)", help="Specifiy currently location in Latitude & Longitude")
+optParser.add_option("-p", "--point", "--coord", dest="location", metavar="LAT,LONG", help="Specifiy currently location in Latitude & Longitude")
 (options, args) = optParser.parse_args()
+
+if options.location is not None:
+  coords = options.location.split(",")
+  loc = Point(float(coords[0]),float(coords[1]));
 
 for day in xrange(3):
   #day_cat = etree.parse("examples/day1otlk_cat.kml", parser)
