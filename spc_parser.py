@@ -68,7 +68,7 @@ def polygon_parser(poly_elm):
   #  print "Inner: " + str(inner_list)
   return Polygon(outer, inner)
 
-loc = Point(35.4432945,-97.5958710)
+loc = Point(35.181651,-97.440069) #(SPC/NWC office)
 parser = etree.XMLParser(ns_clean=True)
 cat_list = ("http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day2otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day3otlk_cat.kml")
 
