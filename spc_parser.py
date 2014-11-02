@@ -3,6 +3,7 @@ import shapely, string
 from shapely.geometry import Polygon, Point
 from lxml import etree
 from os import path
+from optparse import OptionParser
 
 import sys
 
@@ -14,7 +15,7 @@ def poly_list(list_string):
   coord_list = []
   for point in list_string.split(" "):
     coords = point.split(",")
-    #print "(" + coords[0] + "," + coords[1] + ")"
+    #print "(" + coords[1] + "," + coords[0] + ")"
     coord_list.append((float(coords[1]),float(coords[0]))) # Google KML has order of (Long, Lat), so converting to (Lat, Long)
     #print coord_list
   #print "Coordinate List is " + str(type(coord_list))
@@ -51,7 +52,7 @@ def sev_index_str_short(cat_index):
     3 : 'ENH',
     4 : 'MDT',
     5 : 'HIGH'
-  }.get(cat_index, 'None')
+  }.get(cat_index, 'NONE')
 
 def polygon_parser(poly_elm):
   outer = []
@@ -71,10 +72,17 @@ loc = Point(35.4432945,-97.5958710)
 parser = etree.XMLParser(ns_clean=True)
 cat_list = ("http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day2otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day3otlk_cat.kml")
 
+#creating flags
+optParser = OptionParser()
+optParser.add_option("-s", "--short", "--conky", dest="short", action="store_true", help="Display shorthand output instead", default=False)
+optParser.add_option("-l", "--legacy", dest="legacy", action="store_true", help="Interprets file as pre-2014 change to Risk Areas", default=False)
+optParser.add_option("-p", "--point", "--coord", dest="location", metavar="(LAT,LONG)", help="Specifiy currently location in Latitude & Longitude")
+(options, args) = optParser.parse_args()
+
 for day in xrange(3):
   #day_cat = etree.parse("examples/day1otlk_cat.kml", parser)
   day_cat = etree.parse(cat_list[day], parser)
-  legacy = False #for Interpting older KML (as tests) - didn't have Marginal nor Enhanced
+  legacy = options.legacy #for Interpting older KML (as tests) - didn't have Marginal nor Enhanced
   risk = -1
   root = day_cat.getroot()
   risk_areas = root.findall(".//" + XHTML + "Placemark")
@@ -94,7 +102,7 @@ for day in xrange(3):
         #print "Testing in risk area " + sev_index_str(x)
         if(loc.within(risk_poly)):
           risk = x
-  if(len(sys.argv) > 1 and sys.argv[1] == "conky"):
+  if(options.short):
     if(risk == -1):
       print "Day " + str(day+1) + ": NONE"
     else:
