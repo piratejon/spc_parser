@@ -4,6 +4,8 @@ from shapely.geometry import Polygon, Point
 from lxml import etree
 from os import path
 
+import sys
+
 XHTML_NAMESPACE = "http://earth.google.com/kml/2.2"
 XHTML = "{%s}" % XHTML_NAMESPACE
 NSMAP = {None : XHTML_NAMESPACE}
@@ -41,6 +43,16 @@ def sev_index_str(cat_index):
     5 : 'High'
   }.get(cat_index, 'None')
 
+def sev_index_str_short(cat_index):
+  return {
+    0 : 'TSTM',
+    1 : 'MRGL',
+    2 : 'SLGT',
+    3 : 'ENH',
+    4 : 'MDT',
+    5 : 'HIGH'
+  }.get(cat_index, 'None')
+
 def polygon_parser(poly_elm):
   outer = []
   inner = []
@@ -57,28 +69,41 @@ def polygon_parser(poly_elm):
 
 loc = Point(35.4432945,-97.5958710)
 parser = etree.XMLParser(ns_clean=True)
-day_1_cat = etree.parse("examples/day1otlk_cat.kml", parser)
-legacy = False #for Interpting older KML (as tests) - didn't have Marginal nor Enhanced
-risk = -1
-root = day_1_cat.getroot()
-risk_areas = root.findall(".//" + XHTML + "Placemark")
-poly_risk_areas = [[],[],[],[],[],[]]
+cat_list = ("http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day2otlk_cat.kml","http://www.spc.noaa.gov/products/outlook/day3otlk_cat.kml")
+
+for day in xrange(3):
+  #day_cat = etree.parse("examples/day1otlk_cat.kml", parser)
+  day_cat = etree.parse(cat_list[day], parser)
+  legacy = False #for Interpting older KML (as tests) - didn't have Marginal nor Enhanced
+  risk = -1
+  root = day_cat.getroot()
+  risk_areas = root.findall(".//" + XHTML + "Placemark")
+  poly_risk_areas = [[],[],[],[],[],[]]
 # 0 -> TimeSpan
 # 1 -> name
 # 2 -> Style
 # 3 -> ExtendedData
 # 4 -> Polygon
-for risk_area in risk_areas:
-  poly_risk_areas[sev_index(risk_area[1].text)].append(polygon_parser(risk_area[4]))
-for x in xrange(6):
-  if(len(poly_risk_areas[x]) == 0 and not(legacy and (x == 1 or x == 3))):
-    break
+  for risk_area in risk_areas:
+    poly_risk_areas[sev_index(risk_area[1].text)].append(polygon_parser(risk_area[4]))
+  for x in xrange(6):
+    if(len(poly_risk_areas[x]) == 0 and not(legacy and (x == 1 or x == 3))):
+      break
+    else:
+      for risk_poly in poly_risk_areas[x]:
+        #print "Testing in risk area " + sev_index_str(x)
+        if(loc.within(risk_poly)):
+          risk = x
+  if(len(sys.argv) > 1 and sys.argv[1] == "conky"):
+    if(risk == -1):
+      print "Day " + str(day+1) + ": NONE"
+    else:
+      print "Day " + str(day+1) + ": " + sev_index_str_short(risk)
   else:
-    for risk_poly in poly_risk_areas[x]:
-      print "Testing in risk area " + sev_index_str(x)
-      if(loc.within(risk_poly)):
-        risk = x
-print "Within risk area " + sev_index_str(risk)
+    if(risk == -1):
+      print "Day " + str(day+1) + ": not in risk area"
+    else:
+      print "Day " + str(day+1) + ": within " + sev_index_str(risk) + " risk area" 
 #  for child in risk_area:
 #    if(child.tag == XHTML + "name"):
 #    print child.text + " -> " + str(sev_index(child.text))
