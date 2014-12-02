@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 import shapely, string 
 from shapely.geometry import Polygon, Point
 from lxml import etree
@@ -83,7 +83,7 @@ if options.location is not None:
   coords = options.location.split(",")
   loc = Point(float(coords[0]),float(coords[1]));
 
-for day in xrange(3):
+for day in range(3):
   #day_cat = etree.parse("examples/day1otlk_cat.kml", parser)
   day_cat = etree.parse(cat_list[day], parser)
   legacy = options.legacy #for Interpting older KML (as tests) - didn't have Marginal nor Enhanced
@@ -98,7 +98,7 @@ for day in xrange(3):
 # 4 -> Polygon
   for risk_area in risk_areas:
     poly_risk_areas[sev_index(risk_area[1].text)].append(polygon_parser(risk_area[4]))
-  for x in xrange(6):
+  for x in range(6):
     if(len(poly_risk_areas[x]) == 0 and not(legacy and (x == 1 or x == 3))):
       break
     else:
@@ -108,14 +108,14 @@ for day in xrange(3):
           risk = x
   if(options.short):
     if(risk == -1):
-      print "Day " + str(day+1) + ": NONE"
+      print("Day " + str(day+1) + ": NONE")
     else:
-      print "Day " + str(day+1) + ": " + sev_index_str_short(risk)
+      print("Day " + str(day+1) + ": " + sev_index_str_short(risk))
   else:
     if(risk == -1):
-      print "Day " + str(day+1) + ": not in risk area"
+      print("Day " + str(day+1) + ": not in risk area")
     else:
-      print "Day " + str(day+1) + ": within " + sev_index_str(risk) + " risk area" 
+      print("Day " + str(day+1) + ": within " + sev_index_str(risk) + " risk area")
 #  for child in risk_area:
 #    if(child.tag == XHTML + "name"):
 #    print child.text + " -> " + str(sev_index(child.text))
