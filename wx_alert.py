@@ -8,7 +8,9 @@ import datetime
 
 def shorthand(alert_type):
   return {
-    'Air Stagnation Advisory' : 'Air Stag Adv'
+    'Air Stagnation Advisory' : 'Air Stag Adv',
+    'Dense Fog Advisory' : 'Dense Fog Adv',
+    'Wind Advisory' : 'Wind Adv'
   }.get(alert_type, "ERROR")
 
 #creating flags
@@ -24,24 +26,22 @@ else:
 url = 'http://alerts.weather.gov/cap/wwaatmget.php?x=' + loc
 feed = feedparser.parse(url)
 if feed['entries'][0]['title'] == "There are no active watches, warnings or advisories":
-  print "No active alerts."
+  print("No active alerts.")
 else:
   for alert in feed['entries']:
-	if options.short:
-		alert_type = shorthand(alert['cap_event'])
-	else:
-		alert_type = alert['cap_event']
-	alert_end = dateparser.parse(alert['cap_expires'])
-	alert_start = dateparser.parse(alert['cap_effective'])
-	if (alert_end.day > datetime.datetime.now(alert_end.tzinfo).day):
-		alert_string = alert_end.strftime(" until %a %I:%M %p")
-	else:
-		alert_string = alert_end.strftime(" until at %I:%M %p")
-	
-	if (alert_start > datetime.datetime.now(alert_start.tzinfo)):
-		if (alert_start.day > datetime.datetime.now(alert_start.tzinfo).day):
-			alert_string = alert_start.strftime("From %a %I:%M %p ") + alert_string
-		else:
-			alert_string = alert_start.strftime("From %I:%M %p ") + alert_string
-
-	print alert_type + alert_string
+    if(options.short):
+      alert_type = shorthand(alert['cap_event'])
+    else:
+      alert_type = alert['cap_event']
+      alert_end = dateparser.parse(alert['cap_expires'])
+      alert_start = dateparser.parse(alert['cap_effective'])
+      if (alert_end.day > datetime.datetime.now(alert_end.tzinfo).day):
+        alert_string = alert_end.strftime(" until %a %I:%M %p")
+      else:
+        alert_string = alert_end.strftime(" until %I:%M %p")
+      if (alert_start > datetime.datetime.now(alert_start.tzinfo)):
+        if (alert_start.day > datetime.datetime.now(alert_start.tzinfo).day):
+          alert_string = alert_start.strftime("From %a %I:%M %p ") + alert_string
+        else:
+          alert_string = alert_start.strftime("From %I:%M %p ") + alert_string
+    print(alert_type + alert_string)
