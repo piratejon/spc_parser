@@ -10,8 +10,9 @@ def shorthand(alert_type):
   return {
     'Air Stagnation Advisory' : 'Air Stag Adv',
     'Dense Fog Advisory' : 'Dense Fog Adv',
-    'Wind Advisory' : 'Wind Adv'
-  }.get(alert_type, "ERROR")
+    'Wind Advisory' : 'Wind Adv',
+    'Red Flag Warning' : 'Red Flag Warn'
+  }.get(alert_type, "NEW")
 
 #creating flags
 optParser = OptionParser()
@@ -33,15 +34,15 @@ else:
       alert_type = shorthand(alert['cap_event'])
     else:
       alert_type = alert['cap_event']
-      alert_end = dateparser.parse(alert['cap_expires'])
-      alert_start = dateparser.parse(alert['cap_effective'])
-      if (alert_end.day > datetime.datetime.now(alert_end.tzinfo).day):
-        alert_string = alert_end.strftime(" until %a %I:%M %p")
+    alert_end = dateparser.parse(alert['cap_expires'])
+    alert_start = dateparser.parse(alert['cap_effective'])
+    if (alert_end.day > datetime.datetime.now(alert_end.tzinfo).day):
+      alert_string = alert_end.strftime(" until %a %I:%M %p")
+    else:
+      alert_string = alert_end.strftime(" until %I:%M %p")
+    if (alert_start > datetime.datetime.now(alert_start.tzinfo)):
+      if (alert_start.day > datetime.datetime.now(alert_start.tzinfo).day):
+        alert_string = alert_start.strftime("From %a %I:%M %p ") + alert_string
       else:
-        alert_string = alert_end.strftime(" until %I:%M %p")
-      if (alert_start > datetime.datetime.now(alert_start.tzinfo)):
-        if (alert_start.day > datetime.datetime.now(alert_start.tzinfo).day):
-          alert_string = alert_start.strftime("From %a %I:%M %p ") + alert_string
-        else:
-          alert_string = alert_start.strftime("From %I:%M %p ") + alert_string
+        alert_string = alert_start.strftime("From %I:%M %p ") + alert_string
     print(alert_type + alert_string)
