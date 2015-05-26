@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <name>SPC Categorical Category Definitions</name>
+    <filecount>3</filecount>
+    <files>
+        <file>
+            <order>1</order>
+            <url>http://www.spc.noaa.gov/products/outlook/day1otlk_cat.kml</url>
+        </file>
+        <file>
+            <order>2</order>
+            <url>http://www.spc.noaa.gov/products/outlook/day2otlk_cat.kml</url>
+        </file>
+        <file>
+            <order>3</order>
+            <url>http://www.spc.noaa.gov/products/outlook/day3otlk_cat.kml</url>
+        </file>
+    </files>
+    <categorycount>6</categorycount>
+    <categories>
+        <category>
+            <rank>1</rank>
+            <name>General Thunder</name>
+            <shortname>TSTM</shortname>
+        </category>
+        <category>
+            <rank>2</rank>
+            <name>Marginal</name>
+            <shortname>MRGL</shortname>
+        </category>
+        <category>
+            <rank>3</rank>
+            <name>Slight Risk</name>
+            <shortname>SLGT</shortname>
+        </category>
+        <category>
+            <rank>4</rank>
+            <name>Enhanced Risk</name>
+            <shortname>ENH</shortname>
+        </category>
+        <category>
+            <rank>5</rank>
+            <name>Moderate Risk</name>
+            <shortname>MDT</shortname>
+        </category>
+        <category>
+            <rank>6</rank>
+            <name>High Risk</name>
+            <shortname>HIGH</shortname>
+        </category>
+    </categories>
+</document>
